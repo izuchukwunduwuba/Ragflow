@@ -581,22 +581,6 @@ Rag-Project/
 
 ---
 
-## Future improvements
-
-Possible next steps:
-
-- [ ] Embedding pipeline
-- [ ] Vector DB integration
-- [ ] DynamoDB status updates (`PENDING` → `PROCESSING` → `COMPLETE`)
-- [ ] Parent-child chunk graph
-- [ ] Explicit sibling chunk IDs
-- [ ] Reranking
-- [ ] Hybrid search
-- [ ] Chunk expansion at retrieval time
-- [ ] OCR fallback for scanned PDFs
-
----
-
 ## Summary
 
 This ingestion pipeline was built to prepare documents for high-quality RAG retrieval.
