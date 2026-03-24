@@ -58,12 +58,15 @@ def run():
             continue
 
         pages = extract_pages(chunk)
+        heading_path = chunk.meta.headings or []
         chunks.append({
             "chunk_id": f"{document_id}#{i}",
             "document_id": document_id,
             "text": text,
             "chunk_type": infer_chunk_type(chunk),
-            "heading_path": chunk.meta.headings or [],
+            "heading_path": heading_path,
+            "parent_heading": heading_path[-2] if len(heading_path) >= 2 else (heading_path[0] if heading_path else None),
+            "sequence": i,
             "page_start": min(pages) if pages else None,
             "page_end": max(pages) if pages else None,
             "estimated_token_count": len(text),
