@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { generatePresignedurl } from "../services/s3.services";
 import { createDocument } from "../services/dynamodb.service";
-import { randomUUID } from "crypto";
 
 type PresignedUrlContent = {
   fileName: string;
@@ -17,20 +16,14 @@ export const uploadDocument = async (
 
     if (!fileName || !contentType) {
       res.status(400).json({
-        message: "Filename and ontentType is required",
+        message: "Filename and contentType is required",
       });
       return;
     }
 
-    const result = await generatePresignedurl({
-      fileName,
+    const { uploadUrl, fileKey, documentId } = await generatePresignedurl({
       contentType,
     });
-
-    const documentId = result.fileKey.split("/")[2];
-    const fileKey = result.fileKey;
-
-    console.log(documentId);
 
     await createDocument({
       documentId,
@@ -41,7 +34,7 @@ export const uploadDocument = async (
 
     res.status(200).json({
       message: "Presigned upload URL generated successfully",
-      data: result,
+      data: { uploadUrl, fileKey, documentId },
     });
   } catch (error) {
     console.error("Presign upload error:", error);

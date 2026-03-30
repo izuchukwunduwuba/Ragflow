@@ -1,14 +1,27 @@
 import { randomUUID } from "node:crypto";
 
-type GenerateParamsForFile = {
-  originalFileName: string;
+const CONTENT_TYPE_EXTENSIONS: Record<string, string> = {
+  "application/pdf": "pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    "docx",
+  "text/plain": "txt",
+  "text/csv": "csv",
+  "application/json": "json",
+  "text/markdown": "md",
+  "text/x-markdown": "md",
 };
 
-export function generateFileKey({
-  originalFileName,
-}: GenerateParamsForFile): string {
-  const fileName = originalFileName.replace(/\s+/g, "-");
-  const documentId = randomUUID();
+type FileKeyResult = {
+  fileKey: string;
+  documentId: string;
+};
 
-  return `upload/raw/${documentId}/${fileName}`;
+export function generateFileKey(contentType: string): FileKeyResult {
+  const documentId = randomUUID(); // change to any ID generator in production
+  const ext = CONTENT_TYPE_EXTENSIONS[contentType.toLowerCase()] ?? "bin";
+
+  return {
+    fileKey: `upload/raw/${documentId}/${documentId}.${ext}`,
+    documentId,
+  };
 }

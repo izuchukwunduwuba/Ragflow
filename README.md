@@ -1,149 +1,279 @@
-# Document Ingestion Pipeline for Hierarchical RAG
+# Konduit
 
-## Overview
+A production-grade document ingestion pipeline for insurance and financial services that extracts structured data and prepares documents for retrieval-augmented generation.
 
-This project is a production-style document ingestion pipeline built to process PDF documents for retrieval-augmented generation systems.
+Konduit does two things most RAG systems skip:
 
-The goal is not just to extract text.
-
-The real goal is to preserve document structure so retrieval remains meaningful.
-
-Instead of chopping documents into random text windows, this pipeline uses structure-aware chunking to keep headings, subheadings, and related paragraphs connected. That makes retrieval more accurate and reduces meaning loss.
-
-This is especially useful for:
-
-- policy documents
-- handbooks
-- contracts
-- manuals
-- reports
-- knowledge base files
+1. Extracts a **canonical data model** from each document — a validated, confidence-scored set of structured fields specific to insurance and financial documents.
+2. Chunks documents **hierarchically** — preserving section relationships so that retrieval is accurate and context-complete, not just text-matched.
 
 ---
 
 ## Table of Contents
 
-- [Why this system exists](#why-this-system-exists)
-- [Core idea](#core-idea)
-- [High-level architecture](#high-level-architecture)
+- [Running locally](#running-locally)
+- [Why Konduit exists](#why-konduit-exists)
+- [The canonical data model](#the-canonical-data-model)
+- [Architecture](#architecture)
 - [Services](#services)
-- [Design decisions](#design-decisions)
-- [Hierarchical chunking](#hierarchical-chunking)
-- [Sibling retrieval](#sibling-retrieval)
 - [Processing flow](#processing-flow)
-- [Chunk output schema](#chunk-output-schema)
+- [Hierarchical chunking](#hierarchical-chunking)
+- [Chunk schema](#chunk-schema)
+- [Vector storage and sibling retrieval](#vector-storage-and-sibling-retrieval)
 - [Technologies](#technologies)
 - [Environment variables](#environment-variables)
 - [Project structure](#project-structure)
-- [Future improvements](#future-improvements)
-- [Summary](#summary)
 
 ---
 
-## Why this system exists
+## Running locally
 
-A lot of RAG systems fail at ingestion.
+The local test setup requires no AWS account, no database, and no deployed infrastructure. Everything runs on your machine.
 
-They extract text.
-They split by character count.
-They embed chunks.
-Then they wonder why answers come back half-baked.
-
-That approach loses structure.
-
-**Example:**
-
-A document section like this:
-
-- Return Policy
-  - Eligibility
-  - Time Limits
-  - Refund Exceptions
-
-can easily get broken into unrelated chunks.
-
-So when retrieval finds one chunk, the answer may miss the next paragraph that actually explains the condition.
-
-This pipeline fixes that.
-
-It preserves hierarchy during chunking and keeps related chunks linked together so that when one chunk is retrieved, its siblings can also be pulled in.
-
-That is the main value.
+You need:
+- **Python 3.11+** — [download here](https://www.python.org/downloads/)
+- **Node.js 20+** — [download here](https://nodejs.org/)
+- An **OpenAI API key** — [get one here](https://platform.openai.com/api-keys)
 
 ---
 
-## Core idea
+### Step 1 — Add your OpenAI API key
 
-The ingestion system is designed around three principles:
+Open the file `tests/.env` and add your key:
 
-- process documents asynchronously
-- preserve structure during chunking
-- retrieve related content together later
-
-This means the pipeline is not just about file processing.
-
-It is about preparing documents for better retrieval quality.
+```
+OPENAI_API_KEY=sk-...your-key-here...
+```
 
 ---
 
-## High-level architecture
+### Step 2 — Set up the test server
 
-```text
-                    ┌─────────────────────┐
-                    │     Client/App      │
-                    └──────────┬──────────┘
-                               │
-                               │ Upload PDF
-                               ▼
-                    ┌─────────────────────┐
-                    │     S3 Raw Bucket   │
-                    │ uploads/raw/...     │
-                    └──────────┬──────────┘
-                               │
-                               │ Create clean job message
-                               ▼
-                    ┌─────────────────────┐
-                    │    SQS Ingestion    │
-                    │       Queue         │
-                    └──────────┬──────────┘
-                               │
-                               │ Kickstart worker flow
-                               ▼
-                    ┌─────────────────────┐
-                    │   Lambda Starter    │
-                    │ polls / pulls SQS   │
-                    │ starts ECS task     │
-                    └──────────┬──────────┘
-                               │
-                               │ Run worker
-                               ▼
-                    ┌─────────────────────┐
-                    │   ECS Fargate Task  │
-                    │   Docling Worker    │
-                    └──────────┬──────────┘
-                               │
-                ┌──────────────┼──────────────┐
-                │              │              │
-                │ download PDF │ parse layout │ chunk by hierarchy
-                ▼              ▼              ▼
-         ┌────────────┐  ┌──────────────┐  ┌──────────────────┐
-         │   S3 Raw   │  │   Docling    │  │ HybridChunker /  │
-         │   PDF      │  │  Converter   │  │ hierarchy logic  │
-         └────────────┘  └──────────────┘  └──────────────────┘
-                               │
-                               │ write structured chunks
-                               ▼
-                    ┌─────────────────────┐
-                    │ S3 Processed Bucket │
-                    │ processed/chunks/...│
-                    └──────────┬──────────┘
-                               │
-                               │ next stage
-                               ▼
-                    ┌─────────────────────┐
-                    │ Embedding pipeline  │
-                    │ vector DB / search  │
-                    └─────────────────────┘
+Open a terminal and run the following commands one at a time:
+
+```bash
+cd /path/to/Rag-Project
+
+# Create a Python virtual environment
+python3 -m venv tests/.venv
+
+# Activate it
+source tests/.venv/bin/activate
+
+# Install dependencies
+pip install flask flask-cors python-dotenv openai docling
+```
+
+> **Note:** The `docling` package downloads machine learning models on first install. This can take a few minutes depending on your internet connection.
+
+Then start the server:
+
+```bash
+python tests/server.py
+```
+
+You should see:
+
+```
+Running on http://0.0.0.0:8000
+```
+
+Leave this terminal running.
+
+---
+
+### Step 3 — Start the frontend
+
+Open a **second terminal** and run:
+
+```bash
+cd /path/to/Rag-Project/client
+
+npm install
+
+npm run dev
+```
+
+You should see:
+
+```
+Local: http://localhost:5173/
+```
+
+---
+
+### Step 4 — Open the app
+
+Go to [http://localhost:5173](http://localhost:5173) in your browser.
+
+Upload a PDF, DOCX, or other supported document. The app will:
+
+1. Send the file to the local test server
+2. Parse and convert it using Docling
+3. Extract the canonical fields using GPT-4o-mini
+4. Chunk the document hierarchically
+5. Return everything to the frontend for display
+
+Processing typically takes 10–30 seconds depending on document size.
+
+---
+
+### Supported file types
+
+PDF, DOCX, TXT, CSV, JSON, Markdown
+
+---
+
+### Stopping the servers
+
+Press `Ctrl+C` in each terminal to stop the test server and the frontend.
+
+---
+
+## Why Konduit exists
+
+Most RAG pipelines fail at ingestion.
+
+They extract flat text, split it by token count, embed the chunks, and call it done. That approach works for simple documents. It falls apart on insurance policies, loan agreements, and regulatory filings — where structure carries meaning.
+
+A clause that sits under a sub-condition of an exception is not the same as a standalone clause. A coverage limit that applies only to a specific endorsement is not the same as the primary limit. If your chunker doesn't understand that, your retrieval system doesn't either.
+
+Konduit solves this in two ways:
+
+**First**, it extracts a canonical data model from each document using Claude. Instead of hoping retrieval finds the right answer, Konduit pulls known fields — insured name, coverage limit, inception date, exclusions — and validates them. You get structured data immediately, with confidence scores per field.
+
+**Second**, it preserves document hierarchy during chunking. Headings, subheadings, and their relationships survive the processing step. When a chunk is retrieved, its sibling chunks — the adjacent sections under the same heading — can be pulled in alongside it. The model gets context, not fragments.
+
+---
+
+## The canonical data model
+
+The canonical data model is Konduit's core output for each processed document.
+
+It is a fixed schema of fields that matter in insurance and financial documents. Every document that enters the pipeline produces a canonical record. Each field has a value, a confidence level, and the source page it was drawn from.
+
+### Fields
+
+**Party information**
+
+| Field | Description |
+| ----- | ----------- |
+| `insured_name` | Full legal name of the insured entity |
+| `insured_address` | Registered or principal address |
+| `broker_name` | Name of the placing broker |
+| `mga_name` | Managing general agent, if applicable |
+
+**Risk attributes**
+
+| Field | Description |
+| ----- | ----------- |
+| `line_of_business` | Policy class — property, liability, cargo, marine, professional indemnity, etc. |
+| `risk_description` | Summary of the risk being underwritten |
+| `region` | Geographic region of the risk |
+| `country` | Country of the insured |
+
+**Financial terms**
+
+| Field | Description |
+| ----- | ----------- |
+| `annual_revenue` | Annual revenue of the insured entity |
+| `coverage_limit` | Maximum indemnity amount |
+| `deductible` | Deductible or excess amount |
+| `premium` | Policy premium |
+
+**Coverage period**
+
+| Field | Description |
+| ----- | ----------- |
+| `inception_date` | Policy start date (ISO 8601) |
+| `expiry_date` | Policy end date (ISO 8601) |
+
+**Claims history**
+
+| Field | Description |
+| ----- | ----------- |
+| `prior_claims_count` | Number of prior claims |
+| `prior_claims_amount` | Total value of prior claims |
+
+**Coverage terms**
+
+| Field | Description |
+| ----- | ----------- |
+| `exclusions` | List of named exclusions from the policy |
+
+### Confidence scores
+
+Every extracted field carries a confidence level: `high`, `medium`, or `low`. These are produced by the extraction model and stored alongside the value.
+
+This matters in underwriting. A `coverage_limit` with `low` confidence should be reviewed. A `high` confidence `insured_name` can be trusted downstream.
+
+### Validation flags
+
+The rule engine runs after extraction. It checks which required fields are missing or empty and assigns severity levels:
+
+- **Critical** — field is required for underwriting and is absent: `insured_name`, `insured_address`, `line_of_business`, `region`, `country`, `annual_revenue`, `coverage_limit`, `inception_date`, `expiry_date`
+- **Warning** — field is optional but commonly expected: `broker_name`, `mga_name`, `risk_description`, `deductible`, `premium`, `prior_claims_count`, `prior_claims_amount`, `exclusions`
+
+Flags are stored with the canonical record and surfaced in the client.
+
+### Extraction model
+
+Canonical extraction uses **AWS Bedrock Claude 3.5 Sonnet**. The worker converts the document to Markdown using Docling, takes the first 12,000 characters, and sends it to Claude with a structured extraction prompt. Claude returns a JSON object matching the canonical schema. The result is stored in Supabase.
+
+---
+
+## Architecture
+
+```
+┌─────────────────────┐
+│        Client       │  React + Vite frontend
+│  DocumentUpload     │
+│  CanonicalDataCard  │
+└──────────┬──────────┘
+           │ POST /api/docs/presign-upload
+           ▼
+┌─────────────────────┐
+│    Express Server   │  Node.js / TypeScript
+│  Presign + register │
+└──────────┬──────────┘
+           │ Write metadata to DynamoDB (PENDING)
+           │ Client uploads directly to S3
+           ▼
+┌─────────────────────┐
+│   S3 Raw Bucket     │  upload/raw/{documentId}/{file}
+└──────────┬──────────┘
+           │ SQS message: { bucket, key, documentId }
+           ▼
+┌─────────────────────┐
+│  Lambda Kickstarter │  Reads SQS, starts ECS task
+└──────────┬──────────┘
+           │ RunTask with injected env vars
+           ▼
+┌─────────────────────┐
+│   Docling Worker    │  ECS Fargate container
+│   (Python)          │
+│  ┌───────────────┐  │
+│  │ canonical.py  │  │  Claude extracts canonical fields
+│  │ rule_engine   │  │  Validates required fields
+│  │ chunker.py    │  │  Hierarchical chunking via Docling
+│  └───────────────┘  │
+└──────────┬──────────┘
+           ├─── Canonical record → Supabase document_submissions
+           └─── chunks.json → S3 processed/chunks/{documentId}/
+                     │
+                     │ S3 event → SQS
+                     ▼
+          ┌─────────────────────┐
+          │  Embedding Worker   │  Lambda (Node.js)
+          │  Bedrock Titan v2   │  1024-dim cosine embeddings
+          └──────────┬──────────┘
+                     │ Bulk upsert
+                     ▼
+          ┌─────────────────────┐
+          │      Supabase       │  PostgreSQL + pgvector
+          │  document_chunks    │  Vectors + hierarchy metadata
+          │  document_submissions│  Canonical records
+          └─────────────────────┘
 ```
 
 ---
@@ -152,372 +282,244 @@ It is about preparing documents for better retrieval quality.
 
 ### `server/` — REST API
 
-Built with **Node.js**, **Express**, and **TypeScript**.
+Built with Node.js, Express 5, and TypeScript.
 
-| Responsibility                 | Detail                                   |
-| ------------------------------ | ---------------------------------------- |
-| Generate pre-signed upload URL | `POST /api/docs/presign-upload`          |
-| Register document metadata     | Writes to DynamoDB with status `PENDING` |
-| File key format                | `upload/raw/{documentId}/{fileName}`     |
+| Endpoint | Responsibility |
+| -------- | -------------- |
+| `POST /api/docs/presign-upload` | Generate pre-signed S3 URL, register document in DynamoDB with status `PENDING` |
+| `GET /api/docs/:documentId/canonical` | Retrieve canonical record from Supabase once extraction is complete |
+| `GET /health` | Health check |
 
-**Accepted file types:** PDF, DOCX, TXT, CSV, JSON, Markdown
-
-**Stack:** Express 5, AWS SDK v3 (S3, DynamoDB, SQS), `tsx`, TypeScript
+Accepted file types: PDF, DOCX, TXT, CSV, JSON, Markdown.
 
 ---
 
-### `ecs-trigger-lambda/` — ECS Trigger
+### `workers/lambda-kickstarter/` — ECS Trigger
 
-AWS Lambda function triggered by SQS.
+AWS Lambda function that consumes SQS messages and starts ECS Fargate tasks.
 
-| Responsibility   | Detail                                                         |
-| ---------------- | -------------------------------------------------------------- |
-| Read SQS message | Extracts `bucket`, `key`, `documentId`                         |
-| Start ECS task   | Calls `RunTask` on Fargate with per-document env var overrides |
-| Error handling   | Raises on ECS failures — SQS retries / DLQ handles backoff     |
-
-**Runtime:** Python 3.11, `boto3`
+Reads `{ bucket, key, documentId }` from the queue and calls `RunTask` with those values as environment variables injected into the container. Does not do any document processing itself.
 
 ---
 
-### `dockling/` — Document Processor (ECS Container)
+### `workers/docling-worker/` — Document Processor
 
 Containerised Python worker that runs as a Fargate task per document.
 
-| Responsibility               | Detail                                                                   |
-| ---------------------------- | ------------------------------------------------------------------------ |
-| Download document            | From S3 using env vars injected by Lambda                                |
-| Convert to structured format | [Docling](https://github.com/DS4SD/docling) `DocumentConverter`          |
-| Chunk document               | `HybridChunker` — respects document structure, max 512 tokens            |
-| Enrich chunks                | Page numbers, heading path, chunk type (`section_text` / `unstructured`) |
-| Write output                 | `chunks.json` → S3 at `processed/chunks/{documentId}/chunks.json`        |
-
-**Stack:** Python 3.11, Docling, boto3, Docker (ECS Fargate)
+| File | Responsibility |
+| ---- | -------------- |
+| `app.py` | Orchestrator — downloads from S3, runs extraction, chunking, and upload |
+| `canonical.py` | Calls Bedrock Claude, parses response, stores canonical record in Supabase |
+| `rule_engine.py` | Validates extracted fields, assigns severity flags |
+| `chunker.py` | Runs Docling HybridChunker, builds chunk metadata, writes `chunks.json` to S3 |
 
 ---
 
-## Design decisions
+### `workers/embedding-worker/` — Embedding Lambda
 
-### Why Lambda is still in the design
+AWS Lambda function triggered by S3 event (via SQS) when `chunks.json` is written.
 
-The heavy document parsing does not run in Lambda.
-
-Lambda is used as a kickstarter. Its job is simple:
-
-- pull the clean job from SQS
-- start an ECS Fargate task
-- let ECS handle the actual document processing
-
-This keeps Lambda small and cheap while avoiding Lambda limits for Docling and heavier PDF parsing.
-
-So the split is:
-
-```
-Lambda  = orchestrator
-ECS     = worker
-Docling = parsing and chunking engine
-```
-
-That is a much cleaner design than trying to force the full document pipeline into Lambda.
+Reads `chunks.json`, calls Bedrock Titan Embed v2 for each chunk concurrently, and bulk-upserts the results into Supabase `document_chunks`.
 
 ---
 
-### Why ECS Fargate is used for Docling
+### `client/` — Frontend
 
-Docling is better suited to a containerized worker because document parsing can be heavy.
+React + Vite + Tailwind CSS.
 
-Using ECS Fargate gives you:
-
-- better control over CPU and memory
-- fewer packaging limitations
-- cleaner dependency management
-- better fit for long-running or heavy jobs
-- easier scaling for larger ingestion volume
-
-For a real ingestion pipeline, this is the sane path.
-
----
-
-### What Docling is doing here
-
-Docling is the core document intelligence layer inside the ECS worker.
-
-It handles:
-
-- PDF parsing
-- structure detection
-- headings and subheadings
-- reading order
-- relationship-aware chunking
-
-That matters because the ingestion pipeline is not trying to extract plain text only.
-
-It is trying to preserve the structure of the document so that downstream retrieval is better.
-
----
-
-### Why not use naive chunking
-
-Naive chunking usually means:
-
-- fixed token windows
-- blind overlaps
-- no document hierarchy
-- no section awareness
-
-That leads to bad retrieval.
-
-This system avoids that by preserving document relationships from the start.
-
-That is the real point of the ingestion pipeline.
-
----
-
-## Hierarchical chunking
-
-This is the most important part of the pipeline.
-
-Instead of splitting documents into flat chunks, the pipeline preserves structure.
-
-**Example document:**
-
-```
-1. Return Policy
-   1.1 Eligibility
-   1.2 Time Limits
-   1.3 Refund Exceptions
-
-2. Shipping Policy
-   2.1 Delivery Times
-   2.2 Lost Orders
-```
-
-A naive chunker may split that by token count alone. That causes problems:
-
-- heading in one chunk
-- explanation in another
-- exception rule in a third
-- retrieval misses context
-
-Hierarchical chunking fixes that by grouping content based on document relationships.
-
-So instead of random chunks, you get structure-aware chunks like:
-
-```
-1 → 1.1 → 1.2 → 1.3
-2 → 2.1 → 2.2
-```
-
-If a subsection is too large, it can still be split, but the relationship is preserved:
-
-```
-1.2.a → 1.2.b → 1.2.c
-```
-
-This means the chunk still belongs to section 1.2.
-
-That is the difference between basic chunking and ingestion that is actually useful.
-
-### Why hierarchical chunking matters
-
-Hierarchical chunking improves retrieval because it preserves meaning.
-
-Benefits:
-
-- headings stay tied to their content
-- subheadings keep their local context
-- related paragraphs remain grouped
-- large sections can be split without losing identity
-- retrieval becomes more precise
-- context reconstruction becomes easier
-
-This is a big deal in policy-heavy and rule-heavy documents.
-
-Without it, retrieval often returns fragments.
-
-With it, retrieval returns structured context.
-
----
-
-## Sibling retrieval
-
-This is one of the most useful retrieval improvements enabled by this pipeline.
-
-When a chunk is retrieved, the system does not have to stop there.
-
-Because the ingestion step preserved relationships, the retrieval layer can also fetch sibling chunks.
-
-**Example:**
-
-If vector search retrieves `1.2.b`, the system can also pull `1.2.a` and `1.2.c`, and even the parent heading for `1.2`.
-
-Why this matters:
-
-- the matched chunk may contain only part of the answer
-- the previous or next chunk may contain the condition, exception, or explanation
-- pulling siblings keeps the meaning intact
-
-This is where Docling-style structure becomes valuable.
-
-The parser and chunker do not just split text. They preserve enough document relationship for downstream retrieval expansion.
-
-That gives you better answers because the model receives the surrounding context, not just one isolated fragment.
-
-### Example retrieval benefit
-
-Say a user asks:
-
-> What are the exceptions to the return policy?
-
-Vector search may match a chunk from `1.3.b Refund Exceptions`.
-
-If you only return that one chunk, the answer may miss the clause introduced in `1.3.a` or the limitation described in `1.3.c`.
-
-With sibling retrieval, the system can expand the result to include adjacent chunks in the same section.
-
-That gives the language model a more complete view.
-
-- Less guessing.
-- Less hallucination.
-- Better answers.
+| Component | Responsibility |
+| --------- | -------------- |
+| `DocumentUpload.tsx` | Drag-and-drop upload, calls presign endpoint, uploads directly to S3 |
+| `CanonicalDataCard.tsx` | Displays canonical fields, confidence badges, validation flags |
 
 ---
 
 ## Processing flow
 
-**1. File upload**
+**1. Upload**
 
-A PDF is uploaded to the raw S3 bucket.
+Client requests a pre-signed URL from the server. Server registers the document in DynamoDB with status `PENDING` and returns `{ uploadUrl, fileKey, documentId }`. Client uploads the file directly to S3.
 
 ```
-uploads/raw/doc_123/policy.pdf
+upload/raw/{documentId}/{documentId}.pdf
 ```
 
-**2. Queue message**
+**2. Queue**
 
-A clean job is pushed to SQS with:
+A message is pushed to SQS:
 
 ```json
 {
-  "bucket": "my-raw-bucket",
-  "key": "uploads/raw/doc_123/policy.pdf",
+  "bucket": "konduit-raw",
+  "key": "upload/raw/doc_123/doc_123.pdf",
   "documentId": "doc_123"
 }
 ```
 
-The worker only needs to know where the file is and what the document id is. No extra event-unwrapping mess.
-
 **3. Lambda kickstarts ECS**
 
-Lambda reads the job and starts an ECS Fargate task.
+Lambda reads the message and calls `RunTask` on Fargate, injecting `BUCKET`, `KEY`, and `DOCUMENT_ID` as environment variables.
 
-**4. ECS worker processes the document**
+**4. Docling worker processes the document**
 
 The worker:
 
-- downloads the PDF from S3
-- parses it with Docling
-- chunks it with hierarchical awareness
-- builds chunk metadata
-- stores the result in the processed bucket
-
-**5. Processed JSON is stored**
-
-Output is written to the processed bucket:
+- Downloads the PDF from S3
+- Converts it with Docling `DocumentConverter`
+- Exports to Markdown and sends to Claude for canonical extraction
+- Runs the rule engine to validate required fields
+- Stores the canonical record in Supabase `document_submissions`
+- Chunks the document hierarchically with `HybridChunker`
+- Writes `chunks.json` to S3
 
 ```
 processed/chunks/doc_123/chunks.json
 ```
 
-**6. Next stage**
+**5. Embedding Lambda**
 
-The next stage can:
+S3 fires an event when `chunks.json` lands. Lambda reads the file, embeds each chunk with Bedrock Titan, and upserts the vectors into Supabase `document_chunks`.
 
-- embed the chunks
-- store them in a vector database
-- use chunk relationships for sibling retrieval
+**6. Results available**
+
+The client can now fetch the canonical record via `GET /api/docs/:documentId/canonical` and display it in `CanonicalDataCard`.
 
 ---
 
-## Chunk output schema
+## Hierarchical chunking
+
+Documents are not chunked by token count. They are chunked by structure.
+
+The Docling `HybridChunker` respects heading hierarchy, reading order, and section boundaries. Each chunk carries:
+
+- `heading_path` — full ancestry from root to this chunk, e.g. `["Claims Procedure", "Eligibility Criteria"]`
+- `parent_heading` — immediate parent section, used for sibling retrieval queries
+- `sequence` — position in the document for ordered retrieval
+- `page_start`, `page_end` — page numbers
+
+This means a chunk from `1.3 Refund Exceptions` knows it belongs to `1. Return Policy`. It is not an orphan fragment.
+
+If a section is too long to fit in a single chunk (max 512 tokens by default), it is split — but each resulting chunk still carries the full `heading_path`, so its context is preserved.
+
+---
+
+## Chunk schema
 
 Each document produces a `chunks.json` with the following structure:
 
 ```json
 {
   "document_id": "doc_123",
-  "source_bucket": "my-raw-bucket",
-  "source_key": "uploads/raw/doc_123/policy.pdf",
-  "processed_at": "2026-03-24T10:00:00+00:00",
+  "source_bucket": "konduit-raw",
+  "source_key": "upload/raw/doc_123/doc_123.pdf",
+  "processed_at": "2026-03-30T10:00:00+00:00",
   "chunker": { "name": "HybridChunker", "max_tokens": 512 },
   "chunk_count": 3,
   "chunks": [
     {
       "chunk_id": "doc_123#0",
       "document_id": "doc_123",
-      "text": "Return Policy\nCustomers may return eligible products within 30 days...",
+      "text": "Claims Procedure\nInsured must notify the broker within 30 days...",
       "chunk_type": "section_text",
-      "heading_path": ["Return Policy"],
-      "page_start": 1,
-      "page_end": 1,
-      "estimated_token_count": 312,
+      "heading_path": ["Claims Procedure"],
+      "parent_heading": null,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 287,
       "sequence": 0
     },
     {
       "chunk_id": "doc_123#1",
       "document_id": "doc_123",
-      "text": "Return Policy\nRefund Exceptions\nFinal-sale items are not eligible...",
+      "text": "Claims Procedure\nEligibility Criteria\nOnly claims arising from...",
       "chunk_type": "section_text",
-      "heading_path": ["Return Policy", "Refund Exceptions"],
-      "page_start": 2,
-      "page_end": 2,
-      "estimated_token_count": 198,
+      "heading_path": ["Claims Procedure", "Eligibility Criteria"],
+      "parent_heading": "Claims Procedure",
+      "page_start": 4,
+      "page_end": 5,
+      "estimated_token_count": 341,
       "sequence": 1
     }
   ]
 }
 ```
 
-This output preserves:
-
-- document identity
-- heading hierarchy
-- ordering
-- page range
-- chunk sequence
-
-That is what later enables sibling-aware retrieval.
-
 ---
 
-## Benefits of this ingestion system
+## Vector storage and sibling retrieval
 
-| Benefit                     | Why                                                                             |
-| --------------------------- | ------------------------------------------------------------------------------- |
-| Better retrieval quality    | Documents are chunked with structure in mind, not just token count              |
-| Better context preservation | Related sections remain connected through hierarchy and chunk metadata          |
-| Better downstream answers   | The LLM gets more complete and relevant context                                 |
-| Cleaner scaling model       | S3, SQS, Lambda, and ECS each handle a separate responsibility                  |
-| Easier retries              | Failed jobs can be retried through SQS without blocking the whole system        |
-| Production-friendly design  | Heavy document parsing is isolated in ECS instead of being squeezed into Lambda |
+Embedded chunks are stored in Supabase with pgvector.
+
+### `document_chunks` table
+
+| Column | Type | Purpose |
+| ------ | ---- | ------- |
+| `chunk_id` | TEXT | Unique identifier — `{documentId}#{sequence}` |
+| `document_id` | TEXT | Groups all chunks for a document |
+| `text` | TEXT | Raw chunk text |
+| `embedding` | vector(1024) | Bedrock Titan embedding |
+| `chunk_type` | TEXT | `section_text` or `unstructured` |
+| `heading_path` | TEXT[] | Full heading ancestry |
+| `parent_heading` | TEXT | Immediate parent section |
+| `sequence` | INTEGER | Position in document |
+| `page_start` | INTEGER | Start page |
+| `page_end` | INTEGER | End page |
+
+### Indexes
+
+- `ivfflat` cosine index on `embedding` — approximate nearest-neighbour search
+- Composite index on `(document_id, parent_heading, sequence)` — sibling retrieval
+
+### Sibling retrieval
+
+When vector search returns a chunk, the retrieval layer can expand context by fetching sibling chunks from the same section:
+
+```sql
+SELECT * FROM document_chunks
+WHERE document_id = 'doc_123'
+AND parent_heading = 'Claims Procedure'
+ORDER BY sequence;
+```
+
+This gives the language model surrounding context — not just the matched fragment, but the full section it belongs to.
+
+### `document_submissions` table
+
+Stores the canonical record per document.
+
+| Column | Type | Purpose |
+| ------ | ---- | ------- |
+| `document_id` | TEXT | Primary key |
+| `insured_name` | TEXT | Extracted field |
+| `coverage_limit` | TEXT | Extracted field |
+| `... (15 fields)` | TEXT | All canonical fields |
+| `confidence_scores` | JSONB | `{ "field": "high|medium|low" }` |
+| `source_pages` | JSONB | `{ "field": page_number }` |
+| `flags` | JSONB | Rule engine output with severity levels |
+| `extracted_at` | TIMESTAMPTZ | Extraction timestamp |
+| `model` | TEXT | Bedrock model ID used |
 
 ---
 
 ## Technologies
 
-| Layer               | Technology                                  |
-| ------------------- | ------------------------------------------- |
-| API Server          | Node.js, Express 5, TypeScript              |
-| Document Storage    | Amazon S3                                   |
-| Document Registry   | Amazon DynamoDB                             |
-| Queue               | Amazon SQS                                  |
-| Pipeline Trigger    | AWS Lambda (Python 3.11)                    |
-| Document Processing | Amazon ECS / AWS Fargate                    |
-| Containerisation    | Docker                                      |
-| PDF / DOCX Parsing  | [Docling](https://github.com/DS4SD/docling) |
-| Chunking            | Docling HybridChunker                       |
-| AWS SDK (Node)      | AWS SDK v3                                  |
-| AWS SDK (Python)    | boto3                                       |
+| Layer | Technology |
+| ----- | ---------- |
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS |
+| API server | Node.js, Express 5, TypeScript |
+| Document storage | Amazon S3 |
+| Document registry | Amazon DynamoDB |
+| Message queue | Amazon SQS |
+| Pipeline trigger | AWS Lambda (Node.js) |
+| Document processing | Amazon ECS / AWS Fargate |
+| Containerisation | Docker |
+| PDF / DOCX parsing | Docling (DS4SD) |
+| Chunking | Docling HybridChunker |
+| Canonical extraction | AWS Bedrock Claude 3.5 Sonnet |
+| Embedding | AWS Bedrock Titan Embed v2 (1024 dims) |
+| Vector store | Supabase (PostgreSQL + pgvector) |
+| AWS SDK (Node.js) | AWS SDK v3 |
+| AWS SDK (Python) | boto3 |
 
 ---
 
@@ -525,33 +527,49 @@ That is what later enables sibling-aware retrieval.
 
 ### `server/`
 
-| Variable              | Description                          |
-| --------------------- | ------------------------------------ |
-| `PORT`                | Server port (default `5005`)         |
-| `S3_BUCKET_NAME`      | S3 bucket for raw uploads            |
-| `S3_BUCKET_REGION`    | AWS region                           |
+| Variable | Description |
+| -------- | ----------- |
+| `PORT` | Server port (default `5005`) |
+| `S3_BUCKET_NAME` | S3 bucket for raw uploads |
+| `S3_BUCKET_REGION` | AWS region |
+| `S3_ACCESS_KEY` | AWS access key |
+| `S3_SECRET_KEY` | AWS secret key |
 | `DYNAMODB_TABLE_NAME` | DynamoDB table for document metadata |
+| `SUPABASE_DB_URL` | Postgres connection string from Supabase |
 
-### `ecs-trigger-lambda/`
+### `workers/lambda-kickstarter/`
 
-| Variable              | Description                           |
-| --------------------- | ------------------------------------- |
-| `ECS_CLUSTER`         | ECS cluster name or ARN               |
-| `ECS_TASK_DEFINITION` | Task definition name/ARN              |
-| `ECS_CONTAINER_NAME`  | Container name in the task definition |
-| `SUBNETS`             | Comma-separated subnet IDs            |
-| `SECURITY_GROUPS`     | Comma-separated security group IDs    |
-| `AWS_REGION`          | AWS region (default `eu-west-2`)      |
+| Variable | Description |
+| -------- | ----------- |
+| `ECS_CLUSTER` | ECS cluster name or ARN |
+| `ECS_TASK_DEFINITION` | Task definition name or ARN |
+| `ECS_CONTAINER_NAME` | Container name in the task definition |
+| `SUBNETS` | Comma-separated subnet IDs |
+| `SECURITY_GROUPS` | Comma-separated security group IDs |
+| `AWS_REGION` | AWS region (default `eu-west-2`) |
 
-### `dockling/` (ECS container)
+### `workers/docling-worker/` (ECS container)
 
-| Variable           | Description                                        |
-| ------------------ | -------------------------------------------------- |
-| `BUCKET`           | Source S3 bucket (injected by Lambda)              |
-| `KEY`              | S3 object key of the document (injected by Lambda) |
-| `DOCUMENT_ID`      | Unique document ID (injected by Lambda)            |
-| `PROCESSED_BUCKET` | Output bucket (defaults to source bucket)          |
-| `MAX_TOKENS`       | Max tokens per chunk (default `512`)               |
+| Variable | Description |
+| -------- | ----------- |
+| `BUCKET` | Source S3 bucket (injected by Lambda) |
+| `KEY` | S3 object key of the document (injected by Lambda) |
+| `DOCUMENT_ID` | Unique document ID (injected by Lambda) |
+| `PROCESSED_BUCKET` | Output bucket (defaults to source bucket) |
+| `MAX_TOKENS` | Max tokens per chunk (default `512`) |
+| `BEDROCK_MODEL_ID` | Claude model for extraction (default `anthropic.claude-3-5-sonnet-20241022-v2:0`) |
+| `AWS_REGION` | AWS region |
+| `SUPABASE_DB_URL` | Postgres connection string from Supabase |
+
+### `workers/embedding-worker/`
+
+| Variable | Description |
+| -------- | ----------- |
+| `SUPABASE_DB_URL` | Postgres connection string from Supabase |
+| `BEDROCK_MODEL_ID` | Embedding model (default `amazon.titan-embed-text-v2:0`) |
+| `EMBEDDING_DIMENSIONS` | Vector dimensions (default `1024`) |
+| `MAX_WORKERS` | Concurrent embedding threads (default `10`) |
+| `AWS_REGION` | AWS region (default `eu-west-2`) |
 
 ---
 
@@ -559,36 +577,34 @@ That is what later enables sibling-aware retrieval.
 
 ```
 Rag-Project/
-├── server/                    # REST API — Node.js / TypeScript
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controller/
-│   │   ├── middleware/
-│   │   ├── routes/
-│   │   ├── services/
-│   │   └── utils/
-│   ├── index.ts
-│   └── package.json
-├── ecs-trigger-lambda/        # Lambda — SQS consumer, ECS kickstarter
-│   ├── handler.py
-│   └── requirements.txt
-├── dockling/                  # ECS container — Docling document processor
-│   ├── app.py
-│   ├── requirements.txt
-│   └── Dockerfile
+├── client/                        # React frontend
+│   └── src/
+│       └── components/
+│           ├── DocumentUpload.tsx
+│           └── CanonicalDataCard.tsx
+│
+├── server/                        # REST API — Node.js / TypeScript
+│   └── src/
+│       ├── config/                # S3 and Supabase connection setup
+│       ├── controller/            # presign + canonical endpoints
+│       ├── routes/
+│       ├── services/              # S3, DynamoDB logic
+│       └── utils/
+│
+├── workers/
+│   ├── docling-worker/            # ECS Fargate container — Python
+│   │   ├── app.py                 # Orchestrator
+│   │   ├── canonical.py           # Claude extraction + Supabase write
+│   │   ├── rule_engine.py         # Field validation
+│   │   ├── chunker.py             # Hierarchical chunking
+│   │   └── Dockerfile
+│   │
+│   ├── embedding-worker/          # Lambda — Bedrock embeddings + Supabase
+│   │   ├── handler.js
+│   │   └── schema.sql
+│   │
+│   └── lambda-kickstarter/        # Lambda — SQS consumer, ECS trigger
+│       └── handler.js
+│
 └── README.md
 ```
-
----
-
-## Summary
-
-This ingestion pipeline was built to prepare documents for high-quality RAG retrieval.
-
-Its value is not just extracting text.
-
-Its value is preserving structure.
-
-By using Docling inside ECS and keeping chunk relationships intact, the pipeline makes it possible to retrieve not only the matching chunk, but also the related sibling chunks that complete the meaning.
-
-That leads to better retrieval, better context, and better answers.

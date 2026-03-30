@@ -2,7 +2,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({
-  region: process.env.S3_BUCKET_REGION,
+  region: process.env.AWS_REGION,
 });
 
 export const dynamo = DynamoDBDocumentClient.from(client);

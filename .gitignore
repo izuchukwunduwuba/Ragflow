@@ -20,6 +20,10 @@ venv/
 .ipynb_checkpoints/
 *.ipynb
 
+# Test output
+tests/.document.pdt/
+tests/.document2.pdt/
+
 # macOS
 .DS_Store
 

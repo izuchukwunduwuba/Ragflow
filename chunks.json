@@ -1,0 +1,233 @@
+{
+  "document_id": "test-document-001",
+  "processed_at": "2026-03-27T10:48:16.056125+00:00",
+  "chunker": {
+    "name": "HybridChunker",
+    "max_tokens": 250
+  },
+  "chunk_count": 16,
+  "chunks": [
+    {
+      "chunk_id": "test-document-001#0",
+      "document_id": "test-document-001",
+      "text": "SoundSave : A Comprehensive Solution for Copyright Issues In The Music Industry",
+      "chunk_type": "unstructured",
+      "heading_path": [],
+      "parent_heading": null,
+      "sequence": 0,
+      "page_start": 1,
+      "page_end": 1,
+      "estimated_token_count": 79
+    },
+    {
+      "chunk_id": "test-document-001#1",
+      "document_id": "test-document-001",
+      "text": "The music industry has witnessed a seismic transformation over the past few decades, propelled by rapid advancements in digital technology. These technological strides have empowered musicians, enabling them to create, distribute, and connect with global audiences more easily than ever before. (John Kennedy, 2007), former CEO of the International Federation of the Phonographic Industry (IFPI), 'The protection of intellectual property is crucial to fostering creativity in the music industry.' While the digital era has provided artists with unprecedented opportunities, it has also brought about significant challenges, particularly in the realm of copyright infringement and the protection of unreleased music. Artists now find themselves navigating a complex environment where their creative works are at constant risk of unauthorized use, piracy, and premature exposure. This project focuses on developing a web application, 'SoundSave,' a platform designed to address these critical issues by providing comprehensive solutions for music management, archiving, and securing the sharing of unreleased music projects.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.1 Introduction"
+      ],
+      "parent_heading": "1.1 Introduction",
+      "sequence": 1,
+      "page_start": 2,
+      "page_end": 2,
+      "estimated_token_count": 1122
+    },
+    {
+      "chunk_id": "test-document-001#2",
+      "document_id": "test-document-001",
+      "text": "The transformation of the music industry began with the advent of the internet and digital media, which democratized music distribution. Platforms like Spotify, Apple Music, and YouTube. allow artists to bypass traditional gatekeepers such as record labels, music marketers, public relation agencies, and music distributors, enabling direct interaction with fans and a broader reach. (David Israelite, 2015), President and CEO of the National Music Publishers' Association (NMPA), 'In an age of digital distribution, the value of copyright has never been more important.' While this shift has undeniably benefited many artists, it has also introduced new challenges, particularly concerning managing and protecting intellectual property.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.1 Background Study"
+      ],
+      "parent_heading": "1.1 Background Study",
+      "sequence": 2,
+      "page_start": 2,
+      "page_end": 2,
+      "estimated_token_count": 737
+    },
+    {
+      "chunk_id": "test-document-001#3",
+      "document_id": "test-document-001",
+      "text": "One of the most pressing issues that artists face today is copyright infringement. In the digital age, unauthorized use of music has become alarmingly common, facilitated by the ease with which digital files can be copied and shared. Copyright infringement not only affects the financial well-being of artists but also undermines their creative control and professional integrity. (Adele singer-songwriter 2011 ) , highlighted the severity of this issue when she said, 'Piracy is a huge issue in the music industry, and we need to find better ways to protect artists' rights.' When a song is used without permission, artists lose out on potential revenue and the ability to dictate how their work is experienced and interpreted by the public. Moreover, the legal battles to reclaim rights and seek compensation can be lengthy, costly, and emotionally draining, further exacerbating the problem.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.1 Background Study"
+      ],
+      "parent_heading": "1.1 Background Study",
+      "sequence": 3,
+      "page_start": 2,
+      "page_end": 2,
+      "estimated_token_count": 894
+    },
+    {
+      "chunk_id": "test-document-001#4",
+      "document_id": "test-document-001",
+      "text": "The ease with which digital music files can be copied, shared, and distributed online has made it difficult for artists to protect their intellectual properties. (Mitch Glazier 2009) CEO of the Recording Industry Association of America (RIAA), emphasized on the fact that 'Copyright protection ensures that the rights of creators are respected and that they are fairly compensated for their work.' Unauthorized use of music, often referred to as piracy, not only deprives artists of potential income but also undermines their control over how their work is used and perceived by the public. This can be particularly damaging for independent artists, who may lack the resources to pursue legal action against infringers. The existing legal frameworks, while essential, are often slow, expensive, and difficult to navigate, leaving many artists vulnerable to exploitation.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.1 Background Study"
+      ],
+      "parent_heading": "1.1 Background Study",
+      "sequence": 4,
+      "page_start": 2,
+      "page_end": 3,
+      "estimated_token_count": 870
+    },
+    {
+      "chunk_id": "test-document-001#5",
+      "document_id": "test-document-001",
+      "text": "In addition to the widespread issue of copyright infringement, the premature exposure of unreleased music has emerged as a significant concern for artists. Unreleased tracks are frequently leaked online without the artist's consent, leading to a range of negative consequences. Such leaks can disrupt carefully planned marketing strategies, diminish the impact of official releases, and damage an artist's reputation. Moreover, leaks often involve unfinished or low-quality versions of songs, which can lead to misinterpretations of the artist's work and negatively affect fan reception. For many artists, especially those at the beginning of their careers, controlling the timing and manner of their music's release is crucial for building a strong, positive relationship with their audience.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.1 Background Study"
+      ],
+      "parent_heading": "1.1 Background Study",
+      "sequence": 5,
+      "page_start": 3,
+      "page_end": 3,
+      "estimated_token_count": 793
+    },
+    {
+      "chunk_id": "test-document-001#6",
+      "document_id": "test-document-001",
+      "text": "The challenges posed by copyright infringement and leaks are compounded by the fact that existing solutions are often fragmented or inadequate. Many platforms focus primarily on distribution or social engagement, offering limited tools for managing and protecting music. (Maria Pallante, 2012), former U.S. Register of Copyrights, observed that 'Technology has always been ahead of the law, and copyright is struggling to catch up with the digital age.' As a result, artists are left to piece together different services to meet their needs, often at the expense of time, security, and creative control.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.1 Background Study"
+      ],
+      "parent_heading": "1.1 Background Study",
+      "sequence": 6,
+      "page_start": 3,
+      "page_end": 3,
+      "estimated_token_count": 603
+    },
+    {
+      "chunk_id": "test-document-001#7",
+      "document_id": "test-document-001",
+      "text": "In response to these pressing issues, the development of SoundSave offers a promising solution. SoundSave is envisioned as a comprehensive platform designed to address the specific needs of modern musicians. It will provide artists with the tools to securely archive, manage, and share their music, with a strong emphasis on protecting intellectual property and preventing unauthorized access. The platform will integrate advanced security measures, including robust authentication protocols, encryption, and access controls, to ensure that artists retain control over their work at every stage. As (Imogen Heap, 2017), a musician and technologist, stated, 'The challenge of our digital age is to secure our rights as creators while embracing new technologies.'\nBy focusing on the protection and management of music, SoundSave aims to empower artists to navigate the digital landscape with greater confidence and security. This platform will not only help artists safeguard their creative output but also enhance their ability to collaborate, market, and distribute their music effectively. In doing so, SoundSave seeks to address some of the most significant challenges facing the music industry today, contributing to a more secure, equitable, and sustainable environment for artists.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.1 Background Study"
+      ],
+      "parent_heading": "1.1 Background Study",
+      "sequence": 7,
+      "page_start": 3,
+      "page_end": 3,
+      "estimated_token_count": 1286
+    },
+    {
+      "chunk_id": "test-document-001#8",
+      "document_id": "test-document-001",
+      "text": "Despite the abundance of digital tools available today, many musicians still face challenges because the existing solutions don't fully meet their needs. Most platforms tend to focus on either music distribution, like Spotify, or social engagement, like Instagram, but rarely do they cover both areas effectively. This leaves musicians using multiple platforms that don't work well together, which can be frustrating and inefficient.\nMoreover, problems like data security, user privacy, and copyright infringement continue to be major concerns. (John Kennedy 2007), CEO of the International Federation of the Phonographic Industry (IFPI), highlighted this issue when he said, 'In today's digital world, protecting artists' rights is more important than ever, yet we still see widespread abuse of their creative works.' This emphasizes the need for a platform that not only helps artists distribute and promote their music but also protects their intellectual property and personal data.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.2 Problem Statement"
+      ],
+      "parent_heading": "1.2 Problem Statement",
+      "sequence": 8,
+      "page_start": 3,
+      "page_end": 4,
+      "estimated_token_count": 986
+    },
+    {
+      "chunk_id": "test-document-001#9",
+      "document_id": "test-document-001",
+      "text": "Another problem with many existing platforms is that they are not easy to use for everyone. Some platforms have complex interfaces that are difficult for non-tech-savvy users to navigate. (Richard James Burgess, 2020), CEO of the American Association of Independent Music (A2IM), pointed out that, 'Artists should be able to focus on creating music, not wrestling with complicated technology.' This highlights the need for a platform that is user-friendly and accessible to all musicians, regardless of their technical skills.\n(David Israelite, 2019), President and CEO of the National Music Publishers' Association (NMPA), 'As digital platforms grow, so does the challenge of ensuring that creators are fairly compensated and their rights respected.' This underscores the urgency of developing a platform that not only meets the creative needs of artists but also secures their financial interests.\n(Imogen Heap, 2017), a renowned musician and advocate for artists' rights, 'Musicians deserve tools that not only amplify their work but also protect it from unauthorized use.' Her statement supports the necessity for a comprehensive solution that addresses both promotion and protection in the digital space.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.2 Problem Statement"
+      ],
+      "parent_heading": "1.2 Problem Statement",
+      "sequence": 9,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 1209
+    },
+    {
+      "chunk_id": "test-document-001#10",
+      "document_id": "test-document-001",
+      "text": "(Maria Pallante, 2016), former U.S. Register of Copyrights, 'The law struggles to keep up with technology, leaving artists vulnerable. We need systems that proactively protect their rights in a fast-moving digital world.' This highlights the importance of creating a platform that is not just reactive but also anticipates and mitigates risks to artists' intellectual property.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.2 Problem Statement"
+      ],
+      "parent_heading": "1.2 Problem Statement",
+      "sequence": 10,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 377
+    },
+    {
+      "chunk_id": "test-document-001#11",
+      "document_id": "test-document-001",
+      "text": "Soundwave is underscored by the urgent need to enhance protections for music in today's digital era, as the industry continues to embrace digital transformation, musicians face increasing challenges in protecting their intellectual property. The rise of unauthorized piracy and copyrights has highlighted the need for a platform that not only facilitates the sharing and archiving of music but also safeguards artists' rights.\n(Neil Portnow, 2018). former president of the Recording Academy, stated 'The value of music has been diminished by a digital landscape that allows for rampant theft of intellectual property. Musicians deserve better protection for their work.' This research aims to address these concerns by developing a platform that prioritizes security and copyright protection, ensuring that musicians can share their work with confidence.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.3 Justification Statement"
+      ],
+      "parent_heading": "1.3 Justification Statement",
+      "sequence": 11,
+      "page_start": 4,
+      "page_end": 5,
+      "estimated_token_count": 854
+    },
+    {
+      "chunk_id": "test-document-001#12",
+      "document_id": "test-document-001",
+      "text": "Moreover, this research will contribute to the broader conversation about digital platform design and its role in protecting the creative output of musicians. By focusing on the specific challenges posed by copyright infringement, the research will offer valuable insights into how technology can be leveraged to create safer environments for artists. (Paul McGuinness,2012) the longtime manager of U2, highlighted this need, stating, 'Without proper protection of their rights, artists will continue to lose control over their work, which ultimately devalues the entire industry.'\nThe research aims to fill the gap in current digital platforms by developing a solution that is not only functional and intuitive but also provides robust protection against unauthorized use. This approach will help musicians retain control over their work and ensure that their creative efforts are properly recognized and compensated.\n(Berklee College of Music's Music Business Program, 2020) noted, 'As digital platforms evolve, the challenge is not just in distributing music but in protecting the rights of those who create it.' By focusing on the needs of musicians and addressing the vulnerabilities that exist in current systems, this research will contribute to the development of more secure and artist-friendly platforms.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.3 Justification Statement"
+      ],
+      "parent_heading": "1.3 Justification Statement",
+      "sequence": 12,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 1314
+    },
+    {
+      "chunk_id": "test-document-001#13",
+      "document_id": "test-document-001",
+      "text": "Ultimately, by providing insights and recommendations for the design and implementation of secure digital platforms, this research aims to foster innovation, growth, and sustainability in the music industry. It will not only protect artists' rights but also enhance their ability to collaborate, create, and engage with their audience, thereby supporting the long-term health and vitality of the industry.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.3 Justification Statement"
+      ],
+      "parent_heading": "1.3 Justification Statement",
+      "sequence": 13,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 405
+    },
+    {
+      "chunk_id": "test-document-001#14",
+      "document_id": "test-document-001",
+      "text": "The primary aim of this project is to develop a secure, user-friendly digital platform called SoundSave that effectively addresses the challenges of copyright infringement by providing a secured and monitored platform musicians can share and collaborate while working on their music projects. This platform is intended to serve as a comprehensive solution for musicians, offering robust tools for music archiving, management, and the secure sharing of unreleased content. By focusing on the protection of intellectual property and the prevention of unauthorized access, the platform seeks to empower artists to maintain control over their creative work in an increasingly digital and interconnected world.\nOne key objective of this project is to enhance the security of digital music files, thereby mitigating the risk of unauthorized copying, access, distribution and sharing. As studies like \"The Economics of Digital Piracy\" by Stan J. Liebowitz (2011) and \"Internet Piracy and the Decline of Recorded Music Sales\" by Joel Waldfogel (2012) have shown, the ease with which digital files can be shared has had a significant negative impact on the music industry. By integrating advanced encryption and authentication protocols, SoundSave aims to provide a secure environment where artists can confidently store and share their work.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.4 Project Aims and Objective"
+      ],
+      "parent_heading": "1.4 Project Aims and Objective",
+      "sequence": 14,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 1333
+    },
+    {
+      "chunk_id": "test-document-001#15",
+      "document_id": "test-document-001",
+      "text": "Another important objective is to create a platform that facilitates seamless collaboration between artists and curators when working on new projects. The platform will be designed to simplify the process of sharing work-in-progress files, feedback, and creative ideas in a secure manner, ensuring that all collaborators can work together efficiently without compromising the security of the music. As Richard James Burgess, CEO of the American Association of Independent Music (A2IM), pointed out in 2020, 'Artists should be able to focus on creating music, not wrestling with complicated technology.' To this end, the platform will feature an intuitive interface that enables easy collaboration, enhancing the creative process and allowing artists to engage with their audience more effectively.\nUltimately, the project aims to contribute to the broader discourse on digital platform design, offering insights into how technology can be harnessed to protect artists' rights while fostering innovation, creativity, and collaboration within the music industry.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1.4 Project Aims and Objective"
+      ],
+      "parent_heading": "1.4 Project Aims and Objective",
+      "sequence": 15,
+      "page_start": 6,
+      "page_end": 6,
+      "estimated_token_count": 1060
+    }
+  ]
+}

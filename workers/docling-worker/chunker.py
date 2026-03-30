@@ -3,18 +3,15 @@ import os
 import logging
 import boto3
 from datetime import datetime, timezone
-from docling.document_converter import DocumentConverter
 from docling.chunking import HybridChunker
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
 s3 = boto3.client("s3")
 
-PROCESSED_BUCKET = os.environ.get("PROCESSED_BUCKET")
 MAX_TOKENS = int(os.environ.get("MAX_TOKENS", "512"))
+PROCESSED_BUCKET = os.environ.get("PROCESSED_BUCKET")
 
-converter = DocumentConverter()
 chunker = HybridChunker(max_tokens=MAX_TOKENS)
 
 
@@ -33,26 +30,9 @@ def infer_chunk_type(chunk) -> str:
     return "section_text" if headings else "unstructured"
 
 
-def run():
-    bucket = os.environ["BUCKET"]
-    key = os.environ["KEY"]
-    document_id = os.environ["DOCUMENT_ID"]
-
-    file_name = key.split("/")[-1]
-    file_path = f"/tmp/{document_id}_{file_name}"
-
-    try:
-        log.info("Downloading s3://%s/%s", bucket, key)
-        s3.download_file(bucket, key, file_path)
-        result = converter.convert(file_path)
-    except Exception as e:
-        raise RuntimeError(f"Conversion failed for {document_id}: {e}") from e
-    finally:
-        if os.path.exists(file_path):
-            os.remove(file_path)
-
+def chunk_and_upload(document, document_id: str, bucket: str, key: str):
     chunks = []
-    for i, chunk in enumerate(chunker.chunk(result.document)):
+    for i, chunk in enumerate(chunker.chunk(document)):
         text = (chunk.text or "").strip()
         if not text:
             continue
@@ -95,8 +75,4 @@ def run():
         ContentType="application/json",
     )
 
-    log.info("Done. documentId=%s chunkCount=%d", document_id, len(chunks))
-
-
-if __name__ == "__main__":
-    run()
+    return chunks_key

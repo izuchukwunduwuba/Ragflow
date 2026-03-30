@@ -1,0 +1,274 @@
+{
+  "document_id": "test-document-001",
+  "processed_at": "2026-03-30T10:07:13.608493+00:00",
+  "canonical": {
+    "name": {
+      "value": "Malaria Consortium",
+      "confidence": "high",
+      "source_page": 1
+    },
+    "phone_number": {
+      "value": null,
+      "confidence": "low",
+      "source_page": null
+    },
+    "email": {
+      "value": "tenders@malariaconsortium.org",
+      "confidence": "high",
+      "source_page": 1
+    },
+    "address": {
+      "value": null,
+      "confidence": "low",
+      "source_page": null
+    },
+    "country": {
+      "value": "United Kingdom",
+      "confidence": "high",
+      "source_page": 1
+    }
+  },
+  "chunker": {
+    "name": "HybridChunker",
+    "max_tokens": 1024
+  },
+  "chunk_count": 17,
+  "chunks": [
+    {
+      "chunk_id": "test-document-001#0",
+      "document_id": "test-document-001",
+      "text": "JULY 15 TH 2022",
+      "chunk_type": "unstructured",
+      "heading_path": [],
+      "parent_heading": null,
+      "sequence": 0,
+      "page_start": 1,
+      "page_end": 1,
+      "estimated_token_count": 15
+    },
+    {
+      "chunk_id": "test-document-001#1",
+      "document_id": "test-document-001",
+      "text": "REFERENCE NO.: MC-UK-024-RFPINSURANCE BROKING SERVICES",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "REQUEST FOR PROPOSAL (RFP) FOR INSURANCE SERVICES"
+      ],
+      "parent_heading": "REQUEST FOR PROPOSAL (RFP) FOR INSURANCE SERVICES",
+      "sequence": 1,
+      "page_start": 1,
+      "page_end": 1,
+      "estimated_token_count": 54
+    },
+    {
+      "chunk_id": "test-document-001#2",
+      "document_id": "test-document-001",
+      "text": "ONLY SELECTED BIDDERS WILL BE REQUIRED TO RESPOND TO THE RFP. SUBMISSION DEADLINE WILL BE COMMUNICATED IN AUGUST.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "SPECIFICATIONS AND INSTRUCTIONS TO BIDDERS"
+      ],
+      "parent_heading": "SPECIFICATIONS AND INSTRUCTIONS TO BIDDERS",
+      "sequence": 2,
+      "page_start": 1,
+      "page_end": 1,
+      "estimated_token_count": 113
+    },
+    {
+      "chunk_id": "test-document-001#3",
+      "document_id": "test-document-001",
+      "text": "Malaria Consortium (MC) is one of the world's leading non-profit organisations dedicated to the comprehensive control of malaria and other communicable diseases in Africa and Southeast Asia. Malaria Consortium works with communities,  government  and  non-government  agencies,  academic  institutions,  and  local  and  international organisations,  to  ensure  good  evidence  supports  delivery  of  effective  services,  providing  technical  support  for monitoring  and  evaluation  of  programmes  and  activities  for  evidence-based  decision-making  and  strategic planning. The organisation works to improve not only the health of the individual, but also the capacity of national health systems, which helps relieve poverty and support improved economic prosperity.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "A. Malaria Consortium"
+      ],
+      "parent_heading": "A. Malaria Consortium",
+      "sequence": 3,
+      "page_start": 1,
+      "page_end": 1,
+      "estimated_token_count": 777
+    },
+    {
+      "chunk_id": "test-document-001#4",
+      "document_id": "test-document-001",
+      "text": "1. It is the intent of this RFP to secure competitive proposals to select a qualified Insurance Broker for the provision of Risk advice and Insurance Brokerage services to Malaria Consortium UK.\n2. Bidders will be evaluated based on a formal presentation to and question and answers session with the Procurement Review Committee against the criteria defined in section D. Documentation in support of the presentation may be provided by bidders at this time.\n3. Bidders will be allocated time to speak to senior management representatives of Malaria Consortium to better understand the organisation.\n4. Bidders may ask for clarifications on this request for proposal up to XXXXX, 16.00 UK time by sending an email to tenders@malariaconsortium.org with the following reference in the subject: ' MC-UK-024-RFP-INSURANCE BROKING SERVICES ' .\n5. Malaria Consortium shall notify the winning bidder in writing. Malaria Consortium is under no responsibility to release the identity or contract terms of the winning bidder.\n6. It is recommended that bidders address the following areas in their presentation and associated documentation submitted in support of this (refer to section D for the evaluation criteria).\n- a. Firm experience\n- I. Details of similar work you are currently undertaking for international charities\n- II. Details of internal quality assurance programmes operated by your firm\n- III. Negotiating strength in the insurance markets\n- IV. Ability to provide coverage in the countries that Malaria Consortium operates\n- b. Process\n- I. Details of your overall brokering approach and methodology\n- II. Details of your renumeration model\n- III. Who will manage the account and how\n- IV. How claims will be managed\n- V. How you propose to gain familiarity with Malaria Consortium in the first year\n- VI. Draft letter of engagement setting out the scope and terms and conditions of your work, notice periods etc.\n- c. Added value\n- I. What sets your firm apart from other organisations\n- II. Based on information received, any recommended changes in Malaria Consortium ' s risk management approach\n- III. Information on any related services which you may be able to provide and are relevant to the business\n- d. Insurance\n- I. Deta ils of your firm's professional indemnity insurance (to include name of insurer, period and extent of cover and policy number)\n- II. Details of employer's liabilit y insurance\n- III. Details of public liability insurance\n7. Malaria Consortium reserves the right to accept or reject any or all bids, and to accept the bid deemed to be in the best interest of Malaria Consortium and is not bound to accept the lowest priced bid submitted.\n8. Malaria Consortium reserves the right to award contracts to multiple vendors if deemed to be in its best interest.\n9. The award criteria shall be based on the proposal's overall response and 'value for money' wh ile taking into consideration donor and internal requirements and regulations.  The award will be determined by a committee of Malaria Consortium employees.\n10. The successful bidder(s) shall receive a Framework Agreement for the period of up to 2 years, which can be extended up to a maximum of 2 years upon agreement of both parties.\n11. The language for communications and required documents is English.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "B Administrative Information"
+      ],
+      "parent_heading": "B Administrative Information",
+      "sequence": 4,
+      "page_start": 1,
+      "page_end": 2,
+      "estimated_token_count": 3297
+    },
+    {
+      "chunk_id": "test-document-001#5",
+      "document_id": "test-document-001",
+      "text": "12. Taking into consideration MC ' s information provided, the bidders will be assessed on their ability to provide a suite of suitable services and coverage and propose any alternative approaches as well as any potential cost benefit of the chosen approach.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "C Technical Requirements & Specifications"
+      ],
+      "parent_heading": "C Technical Requirements & Specifications",
+      "sequence": 5,
+      "page_start": 3,
+      "page_end": 3,
+      "estimated_token_count": 258
+    },
+    {
+      "chunk_id": "test-document-001#6",
+      "document_id": "test-document-001",
+      "text": "For the proposal to be considered technically compliant, a bidder must achieve a minimum score of 60%. Proposals which do not meet the minimum score will be given no further consideration. In addition, clarity and completeness of presentation will be considered during the evaluation.\nTechnical offer, Total100% = 60%. Access to expertise: Broker skills and experience Quality of the service team Access to a wider array of expertise Claims and crisis response, Total100% = 20%. Ability to supply: Ability to service all areas of the business Placement of niche or specialist covers Service available in geographical locations as required, Total100% = 10%. Cultural fit: Working culture Teamfit between brokerandMCteam, Total100% = 10%. Approach to service: Appropriate service structure, including day to-day management and overall stewardship of the account Ability to meet any reporting requirements, Total100% = 10%. Newideas and innovation: Efficacy of current insurance policies Brokers' ability to challenge status quo Innovation and effective programme design, Total100% = 10%. Financial offer, Total100% = 40%. Bidder 's remune ration structure Disclosures of commission Required level of transparency over all income, Total100% = 20%. Broker 's placing ski lls Achieving value for money in programme design, including breadth of cover and limits/deductibles Transparent and competitive pricing model for the required services Access to unique broker coverage options, Total100% = 20%",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "D RFP Evaluation Criteria"
+      ],
+      "parent_heading": "D RFP Evaluation Criteria",
+      "sequence": 6,
+      "page_start": 3,
+      "page_end": 3,
+      "estimated_token_count": 1493
+    },
+    {
+      "chunk_id": "test-document-001#7",
+      "document_id": "test-document-001",
+      "text": "These  terms  and  conditions  (\" Conditions \")  form  part  of  the  contract  between  the  supplier  (\" Supplier \")  and  Malaria  Consortium  (the \" Customer \"), in relation to the purchase order (\" Order \") (the Order and the Conditions are together referred to as the \" Contract \"). Terms not otherwise defined herein shall have the meaning given to them in the applicable Order.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "1 Definitions and Interpretation"
+      ],
+      "parent_heading": "1 Definitions and Interpretation",
+      "sequence": 7,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 385
+    },
+    {
+      "chunk_id": "test-document-001#8",
+      "document_id": "test-document-001",
+      "text": "- 2.1 The Goods and the Services shall, as appropriate:\n- a) correspond with their description in the Order and any applicable specification;\n- b) comply with all applicable statutory and regulatory requirements;\n- c) be of the highest quality and fit for each purpose held out by the Supplier or made known to the Supplier by the Customer;\n- d) be free from defects in design, material, workmanship and installation; and\n- e) be performed with the best care, skill and diligence in accordance with best practice in the Supplier's industry, profession or trade.\n- 2.2 The Customer (including its representatives or agents) reserves the right at any time wit hout the provision of prior notice to audit the Supplier's records, inspect work being undertaken in relation to the supply of the Goods and Services and, in the case of Goods, to test them.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "2 Quality and Defects"
+      ],
+      "parent_heading": "2 Quality and Defects",
+      "sequence": 8,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 848
+    },
+    {
+      "chunk_id": "test-document-001#9",
+      "document_id": "test-document-001",
+      "text": "- 3.1 The Supplier shall observe the highest ethical standards during the performance of its obligations under this Contract including international labour standards promoted by the International Labour Organisation including in the areas of child labour and forced labour.\n- 3.2 The Supplier, its suppliers and sub-contractors shall comply with all environmental, public health & safety, and product safety statutory and regulatory requirements and standards, shall not in any way be involved in (a) the manufacture or sale of arms or have any business relations with armed groups or governments for any war related purpose; or (b) terrorism and shall check its staff, suppliers and sub-contractors against the following sanctions lists: UK Treasury List, EC List, OFAC List and US Treasury List and comply with all regulatory requirements relating thereto.\n- 3.3 The Supplier shall comply with the following Customer Policies, which are available upon request: Safeguarding and Anti-Bribery. [Note: query whether these should be defined]",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "3 Ethical Standards"
+      ],
+      "parent_heading": "3 Ethical Standards",
+      "sequence": 9,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 1039
+    },
+    {
+      "chunk_id": "test-document-001#10",
+      "document_id": "test-document-001",
+      "text": "- 4.1 The Goods shall be delivered to, and the Services shall be performed at the address and on the date or within the period stated in the Order, and in either case during the Customer's usual business hours, except where otherwise agreed in the Order.  Time shall be of the essence in respect of this Condition 4.1.\n- 4.2 Where the date of delivery of the Goods or of performance of Services is to be specified after issue of the Order, the Supplier shall give the Customer reasonable written notice of the specified date.\n- 4.3 Delivery of the goods shall take place and title in the Goods will pass on the completion of the physical transfer of the goods from the Supplier or its agents to the Customer or its agents at the address specified in the Order.\n- 4.4 Risk of damage to or loss of the Goods shall pass to the Customer in accordance with the relevant provisions of Incoterms rules as in force at the date the Contract is made or, where Incoterms do not apply, risk in the Goods shall pass to the Customer on completion of delivery. [Note: need to specify an Incoterm in the Purchaser Order if this is to work.]\n- 4.5 The Customer shall not be deemed to have accepted any Goods or Services and shall retain its right to reject such Goods and Services until the Customer has had reasonable time to inspect them following delivery and/or performance by the Supplier.\n- 4.6 The Customer shall be entitled to reject any Goods delivered or Services supplied which are not in accordance with the Contract.  If any Goods or Services are so rejected, at th e Customer's option, the S upplier shall forthwith re-supply substitute Goods or Services which conform with the Contract.  Alternatively, the Customer may cancel the Contract and return any rejected Goods to the Supplier at the Supplier's risk and expense and the Supplier shall repay to the Customer any amount paid in relation to such Goods or Services.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "4 Delivery / Performance"
+      ],
+      "parent_heading": "4 Delivery / Performance",
+      "sequence": 10,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 1918
+    },
+    {
+      "chunk_id": "test-document-001#11",
+      "document_id": "test-document-001",
+      "text": "The Supplier shall indemnify the Customer in full against all liability, loss, damages, costs and expenses (including legal expenses) awarded against or incurred or paid by the Customer as a result of or in connection with any act or omission of the Supplier or its employees, agents or sub-contractors in performing its obligations under this Contract, and any claims made against the Customer by third parties (including claims for death, personal injury or damage to property) arising out of, or in connection with, the supply of the Goods or Services or a breach of Clause 2.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "5 Indemnity"
+      ],
+      "parent_heading": "5 Indemnity",
+      "sequence": 11,
+      "page_start": 4,
+      "page_end": 4,
+      "estimated_token_count": 579
+    },
+    {
+      "chunk_id": "test-document-001#12",
+      "document_id": "test-document-001",
+      "text": "Payment in arrears will be made as set out in the Order and the Customer shall be entitled to off-set against the price set out in the Order all sums owed to the Customer by the Supplier.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "6 Price and Payment"
+      ],
+      "parent_heading": "6 Price and Payment",
+      "sequence": 12,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 187
+    },
+    {
+      "chunk_id": "test-document-001#13",
+      "document_id": "test-document-001",
+      "text": "- 7.1 The Customer may terminate the Contract without liability to the Supplier in whole or in part at any time and for any reason whatsoever by giving the Supplier at least one month's written notice.\n- 7.2 The Customer may terminate the Contract with immediate effect by giving written notice to the Supplier and the Supplier shall pay to the Customer any losses (including all associated costs, liabilities and expenses, including legal costs) incurred by the Customer as a consequence of such termination and/or breach from the Supplier at any time if the Supplier:\n- a) becomes insolvent, goes into liquidation, makes any voluntary arrangement with its creditors, or becomes subject to an administration order or other similar bankruptcy process;\n- b) is in material breach of its obligations under the Contract; or\n- c) is in breach of any of its obligations and fails to remedy such breach within 14 days of written notice to remedy from the Customer.\n- 7.3 In the event of termination, all existing purchase orders must be completed.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "7 Termination"
+      ],
+      "parent_heading": "7 Termination",
+      "sequence": 13,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 1041
+    },
+    {
+      "chunk_id": "test-document-001#14",
+      "document_id": "test-document-001",
+      "text": "- a) it has all necessary internal authorisations and all authorisations from all relevant third parties to enable it to supply the Goods and the Services without infringing any appl icable law, regulation, code or practice or any third party's rights;\n- b) it  will  not and will ensure that none of its employees will accept any commission, gift, inducement or other financial benefit from any supplier or potential supplier of the Customer; and\n- c) the Services will be performed by appropriately qualified and trained personnel, with the best care, skill and diligence and to such high standard of quality as it is reasonable for the Customer to expect in all the circumstances.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "8.1 The Supplier warrants to the Customer that:"
+      ],
+      "parent_heading": "8.1 The Supplier warrants to the Customer that:",
+      "sequence": 14,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 683
+    },
+    {
+      "chunk_id": "test-document-001#15",
+      "document_id": "test-document-001",
+      "text": "- 9.1 Neither the Supplier nor the Customer shall be liable for any failure or delay in performing its obligations under the Contract to the extent that such failure or delay is caused by an event that is beyond that party's reasonable control and was not reasonably foreseeable at the date of the Order  (a  \" Force  Majeure  Event \")  provided  that  the  Supplier  shall  use  best  endeavours  to  cure  such  Force  Majeure  Event  and  resume performance under the Contract.\n- 9.2 If any Force Majeure Event prevents the Supplier from carrying out its obligations under the Contract for a continuous period of more than 14 days, the Customer may terminate the Contract immediately by giving written notice to the Supplier.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "9 Force majeure"
+      ],
+      "parent_heading": "9 Force majeure",
+      "sequence": 15,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 728
+    },
+    {
+      "chunk_id": "test-document-001#16",
+      "document_id": "test-document-001",
+      "text": "- 10.1 The  Supplier  shall  not  use  the  Customer's  name,  brandin g  or  logo  other  than  in  accordance  with  the  Customer's  written  instructions  or authorisation.\n- 10.2 The Supplier may not assign, transfer, charge, subcontract, novate or deal in any other manner with any or all of its rights or obligations under the Contract without the Custome r's prior written consent.\n- 10.3 Any notice under or in connection with the Contract shall be given in writing to the address specified in the Order or to such other address as shall be notified in writing from time to time.  For the purposes of this Condition, \"writing\" shall include e-mails and faxes.\n- 10.4 If any court or competent authority finds that any provision of the Contract (or part of any provision) is invalid, illegal or unenforceable, that provision or part-provision shall, to the extent required, be deemed to be deleted, and the validity and enforceability of the other provisions of the Contract shall not be affected.\n- 10.5 Any variation to the Contract, including the introduction of any additional terms and conditions, shall only be binding when agreed in writing and signed by both parties.\n- 10.6 The Contract shall be governed by and construed in accordance with English law. The parties irrevocably submit to the exclusive jurisdiction of the courts of England and Wales to settle any dispute or claim arising out of or in connection with the Contract or its subject matter  or formation.\n- 10.7 A person who is not a party to the Contract shall not have any rights under or in connection with it.",
+      "chunk_type": "section_text",
+      "heading_path": [
+        "10 General"
+      ],
+      "parent_heading": "10 General",
+      "sequence": 16,
+      "page_start": 5,
+      "page_end": 5,
+      "estimated_token_count": 1593
+    }
+  ]
+}

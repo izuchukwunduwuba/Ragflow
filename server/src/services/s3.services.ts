@@ -5,14 +5,13 @@ import { generateFileKey } from "../utils/generateKey";
 import path from "node:path";
 
 type generateUrlParams = {
-  //   userId: string;
-  fileName: string;
   contentType: string;
 };
 
 type generateUrlResponse = {
   uploadUrl: string;
   fileKey: string;
+  documentId: string;
 };
 
 const allowedTypes = [
@@ -26,13 +25,10 @@ const allowedTypes = [
 ];
 
 export const generatePresignedurl = async ({
-  fileName,
   contentType,
 }: generateUrlParams): Promise<generateUrlResponse> => {
   try {
-    const fileKey = generateFileKey({
-      originalFileName: fileName,
-    });
+    const { fileKey, documentId } = generateFileKey(contentType);
 
     if (!allowedTypes.includes(contentType.toLowerCase())) {
       throw new Error("File type is not accepted");
@@ -45,12 +41,13 @@ export const generatePresignedurl = async ({
     });
 
     const uploadUrl = await getSignedUrl(s3, command, {
-      expiresIn: 60 * 5,
+      expiresIn: 60 * 60,
     });
 
     return {
       uploadUrl,
       fileKey,
+      documentId,
     };
   } catch (error) {
     console.error("Full error:", JSON.stringify(error, null, 2));
