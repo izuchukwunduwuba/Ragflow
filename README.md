@@ -1,8 +1,6 @@
-# Konduit
-
 A production-grade document ingestion pipeline for insurance and financial services that extracts structured data and prepares documents for retrieval-augmented generation.
 
-Konduit does two things most RAG systems skip:
+This system does two things most RAG systems skip:
 
 1. Extracts a **canonical data model** from each document — a validated, confidence-scored set of structured fields specific to insurance and financial documents.
 2. Chunks documents **hierarchically** — preserving section relationships so that retrieval is accurate and context-complete, not just text-matched.
@@ -12,7 +10,7 @@ Konduit does two things most RAG systems skip:
 ## Table of Contents
 
 - [Running locally](#running-locally)
-- [Why Konduit exists](#why-konduit-exists)
+- [Why This system exists](#why-this-system-exists)
 - [The canonical data model](#the-canonical-data-model)
 - [Architecture](#architecture)
 - [Services](#services)
@@ -31,6 +29,7 @@ Konduit does two things most RAG systems skip:
 The local test setup requires no AWS account, no database, and no deployed infrastructure. Everything runs on your machine.
 
 You need:
+
 - **Python 3.11+** — [download here](https://www.python.org/downloads/)
 - **Node.js 20+** — [download here](https://nodejs.org/)
 - An **OpenAI API key** — [get one here](https://platform.openai.com/api-keys)
@@ -130,7 +129,7 @@ Press `Ctrl+C` in each terminal to stop the test server and the frontend.
 
 ---
 
-## Why Konduit exists
+## Why This system exists
 
 Most RAG pipelines fail at ingestion.
 
@@ -138,9 +137,9 @@ They extract flat text, split it by token count, embed the chunks, and call it d
 
 A clause that sits under a sub-condition of an exception is not the same as a standalone clause. A coverage limit that applies only to a specific endorsement is not the same as the primary limit. If your chunker doesn't understand that, your retrieval system doesn't either.
 
-Konduit solves this in two ways:
+What this system solves this in two ways:
 
-**First**, it extracts a canonical data model from each document using Claude. Instead of hoping retrieval finds the right answer, Konduit pulls known fields — insured name, coverage limit, inception date, exclusions — and validates them. You get structured data immediately, with confidence scores per field.
+**First**, it extracts a canonical data model from each document using Claude. Instead of hoping retrieval finds the right answer, pulls known fields — insured name, coverage limit, inception date, exclusions — and validates them. You get structured data immediately, with confidence scores per field.
 
 **Second**, it preserves document hierarchy during chunking. Headings, subheadings, and their relationships survive the processing step. When a chunk is retrieved, its sibling chunks — the adjacent sections under the same heading — can be pulled in alongside it. The model gets context, not fragments.
 
@@ -148,7 +147,7 @@ Konduit solves this in two ways:
 
 ## The canonical data model
 
-The canonical data model is Konduit's core output for each processed document.
+The canonical data model is system's core output for each processed document.
 
 It is a fixed schema of fields that matter in insurance and financial documents. Every document that enters the pipeline produces a canonical record. Each field has a value, a confidence level, and the source page it was drawn from.
 
@@ -156,49 +155,49 @@ It is a fixed schema of fields that matter in insurance and financial documents.
 
 **Party information**
 
-| Field | Description |
-| ----- | ----------- |
-| `insured_name` | Full legal name of the insured entity |
-| `insured_address` | Registered or principal address |
-| `broker_name` | Name of the placing broker |
-| `mga_name` | Managing general agent, if applicable |
+| Field             | Description                           |
+| ----------------- | ------------------------------------- |
+| `insured_name`    | Full legal name of the insured entity |
+| `insured_address` | Registered or principal address       |
+| `broker_name`     | Name of the placing broker            |
+| `mga_name`        | Managing general agent, if applicable |
 
 **Risk attributes**
 
-| Field | Description |
-| ----- | ----------- |
+| Field              | Description                                                                     |
+| ------------------ | ------------------------------------------------------------------------------- |
 | `line_of_business` | Policy class — property, liability, cargo, marine, professional indemnity, etc. |
-| `risk_description` | Summary of the risk being underwritten |
-| `region` | Geographic region of the risk |
-| `country` | Country of the insured |
+| `risk_description` | Summary of the risk being underwritten                                          |
+| `region`           | Geographic region of the risk                                                   |
+| `country`          | Country of the insured                                                          |
 
 **Financial terms**
 
-| Field | Description |
-| ----- | ----------- |
+| Field            | Description                          |
+| ---------------- | ------------------------------------ |
 | `annual_revenue` | Annual revenue of the insured entity |
-| `coverage_limit` | Maximum indemnity amount |
-| `deductible` | Deductible or excess amount |
-| `premium` | Policy premium |
+| `coverage_limit` | Maximum indemnity amount             |
+| `deductible`     | Deductible or excess amount          |
+| `premium`        | Policy premium                       |
 
 **Coverage period**
 
-| Field | Description |
-| ----- | ----------- |
+| Field            | Description                  |
+| ---------------- | ---------------------------- |
 | `inception_date` | Policy start date (ISO 8601) |
-| `expiry_date` | Policy end date (ISO 8601) |
+| `expiry_date`    | Policy end date (ISO 8601)   |
 
 **Claims history**
 
-| Field | Description |
-| ----- | ----------- |
-| `prior_claims_count` | Number of prior claims |
+| Field                 | Description                 |
+| --------------------- | --------------------------- |
+| `prior_claims_count`  | Number of prior claims      |
 | `prior_claims_amount` | Total value of prior claims |
 
 **Coverage terms**
 
-| Field | Description |
-| ----- | ----------- |
+| Field        | Description                              |
+| ------------ | ---------------------------------------- |
 | `exclusions` | List of named exclusions from the policy |
 
 ### Confidence scores
@@ -284,11 +283,11 @@ Canonical extraction uses **AWS Bedrock Claude 3.5 Sonnet**. The worker converts
 
 Built with Node.js, Express 5, and TypeScript.
 
-| Endpoint | Responsibility |
-| -------- | -------------- |
-| `POST /api/docs/presign-upload` | Generate pre-signed S3 URL, register document in DynamoDB with status `PENDING` |
-| `GET /api/docs/:documentId/canonical` | Retrieve canonical record from Supabase once extraction is complete |
-| `GET /health` | Health check |
+| Endpoint                              | Responsibility                                                                  |
+| ------------------------------------- | ------------------------------------------------------------------------------- |
+| `POST /api/docs/presign-upload`       | Generate pre-signed S3 URL, register document in DynamoDB with status `PENDING` |
+| `GET /api/docs/:documentId/canonical` | Retrieve canonical record from Supabase once extraction is complete             |
+| `GET /health`                         | Health check                                                                    |
 
 Accepted file types: PDF, DOCX, TXT, CSV, JSON, Markdown.
 
@@ -306,12 +305,12 @@ Reads `{ bucket, key, documentId }` from the queue and calls `RunTask` with thos
 
 Containerised Python worker that runs as a Fargate task per document.
 
-| File | Responsibility |
-| ---- | -------------- |
-| `app.py` | Orchestrator — downloads from S3, runs extraction, chunking, and upload |
-| `canonical.py` | Calls Bedrock Claude, parses response, stores canonical record in Supabase |
-| `rule_engine.py` | Validates extracted fields, assigns severity flags |
-| `chunker.py` | Runs Docling HybridChunker, builds chunk metadata, writes `chunks.json` to S3 |
+| File             | Responsibility                                                                |
+| ---------------- | ----------------------------------------------------------------------------- |
+| `app.py`         | Orchestrator — downloads from S3, runs extraction, chunking, and upload       |
+| `canonical.py`   | Calls Bedrock Claude, parses response, stores canonical record in Supabase    |
+| `rule_engine.py` | Validates extracted fields, assigns severity flags                            |
+| `chunker.py`     | Runs Docling HybridChunker, builds chunk metadata, writes `chunks.json` to S3 |
 
 ---
 
@@ -327,10 +326,10 @@ Reads `chunks.json`, calls Bedrock Titan Embed v2 for each chunk concurrently, a
 
 React + Vite + Tailwind CSS.
 
-| Component | Responsibility |
-| --------- | -------------- |
-| `DocumentUpload.tsx` | Drag-and-drop upload, calls presign endpoint, uploads directly to S3 |
-| `CanonicalDataCard.tsx` | Displays canonical fields, confidence badges, validation flags |
+| Component               | Responsibility                                                       |
+| ----------------------- | -------------------------------------------------------------------- |
+| `DocumentUpload.tsx`    | Drag-and-drop upload, calls presign endpoint, uploads directly to S3 |
+| `CanonicalDataCard.tsx` | Displays canonical fields, confidence badges, validation flags       |
 
 ---
 
@@ -350,7 +349,7 @@ A message is pushed to SQS:
 
 ```json
 {
-  "bucket": "konduit-raw",
+  "bucket": "ingestion-raw",
   "key": "upload/raw/doc_123/doc_123.pdf",
   "documentId": "doc_123"
 }
@@ -410,7 +409,7 @@ Each document produces a `chunks.json` with the following structure:
 ```json
 {
   "document_id": "doc_123",
-  "source_bucket": "konduit-raw",
+  "source_bucket": "ingestion-raw",
   "source_key": "upload/raw/doc_123/doc_123.pdf",
   "processed_at": "2026-03-30T10:00:00+00:00",
   "chunker": { "name": "HybridChunker", "max_tokens": 512 },
@@ -452,18 +451,18 @@ Embedded chunks are stored in Supabase with pgvector.
 
 ### `document_chunks` table
 
-| Column | Type | Purpose |
-| ------ | ---- | ------- |
-| `chunk_id` | TEXT | Unique identifier — `{documentId}#{sequence}` |
-| `document_id` | TEXT | Groups all chunks for a document |
-| `text` | TEXT | Raw chunk text |
-| `embedding` | vector(1024) | Bedrock Titan embedding |
-| `chunk_type` | TEXT | `section_text` or `unstructured` |
-| `heading_path` | TEXT[] | Full heading ancestry |
-| `parent_heading` | TEXT | Immediate parent section |
-| `sequence` | INTEGER | Position in document |
-| `page_start` | INTEGER | Start page |
-| `page_end` | INTEGER | End page |
+| Column           | Type         | Purpose                                       |
+| ---------------- | ------------ | --------------------------------------------- |
+| `chunk_id`       | TEXT         | Unique identifier — `{documentId}#{sequence}` |
+| `document_id`    | TEXT         | Groups all chunks for a document              |
+| `text`           | TEXT         | Raw chunk text                                |
+| `embedding`      | vector(1024) | Bedrock Titan embedding                       |
+| `chunk_type`     | TEXT         | `section_text` or `unstructured`              |
+| `heading_path`   | TEXT[]       | Full heading ancestry                         |
+| `parent_heading` | TEXT         | Immediate parent section                      |
+| `sequence`       | INTEGER      | Position in document                          |
+| `page_start`     | INTEGER      | Start page                                    |
+| `page_end`       | INTEGER      | End page                                      |
 
 ### Indexes
 
@@ -487,39 +486,39 @@ This gives the language model surrounding context — not just the matched fragm
 
 Stores the canonical record per document.
 
-| Column | Type | Purpose |
-| ------ | ---- | ------- |
-| `document_id` | TEXT | Primary key |
-| `insured_name` | TEXT | Extracted field |
-| `coverage_limit` | TEXT | Extracted field |
-| `... (15 fields)` | TEXT | All canonical fields |
-| `confidence_scores` | JSONB | `{ "field": "high|medium|low" }` |
-| `source_pages` | JSONB | `{ "field": page_number }` |
-| `flags` | JSONB | Rule engine output with severity levels |
-| `extracted_at` | TIMESTAMPTZ | Extraction timestamp |
-| `model` | TEXT | Bedrock model ID used |
+| Column              | Type        | Purpose                                 |
+| ------------------- | ----------- | --------------------------------------- | ------ | ------- |
+| `document_id`       | TEXT        | Primary key                             |
+| `insured_name`      | TEXT        | Extracted field                         |
+| `coverage_limit`    | TEXT        | Extracted field                         |
+| `... (15 fields)`   | TEXT        | All canonical fields                    |
+| `confidence_scores` | JSONB       | `{ "field": "high                       | medium | low" }` |
+| `source_pages`      | JSONB       | `{ "field": page_number }`              |
+| `flags`             | JSONB       | Rule engine output with severity levels |
+| `extracted_at`      | TIMESTAMPTZ | Extraction timestamp                    |
+| `model`             | TEXT        | Bedrock model ID used                   |
 
 ---
 
 ## Technologies
 
-| Layer | Technology |
-| ----- | ---------- |
-| Frontend | React 19, Vite, TypeScript, Tailwind CSS |
-| API server | Node.js, Express 5, TypeScript |
-| Document storage | Amazon S3 |
-| Document registry | Amazon DynamoDB |
-| Message queue | Amazon SQS |
-| Pipeline trigger | AWS Lambda (Node.js) |
-| Document processing | Amazon ECS / AWS Fargate |
-| Containerisation | Docker |
-| PDF / DOCX parsing | Docling (DS4SD) |
-| Chunking | Docling HybridChunker |
-| Canonical extraction | AWS Bedrock Claude 3.5 Sonnet |
-| Embedding | AWS Bedrock Titan Embed v2 (1024 dims) |
-| Vector store | Supabase (PostgreSQL + pgvector) |
-| AWS SDK (Node.js) | AWS SDK v3 |
-| AWS SDK (Python) | boto3 |
+| Layer                | Technology                               |
+| -------------------- | ---------------------------------------- |
+| Frontend             | React 19, Vite, TypeScript, Tailwind CSS |
+| API server           | Node.js, Express 5, TypeScript           |
+| Document storage     | Amazon S3                                |
+| Document registry    | Amazon DynamoDB                          |
+| Message queue        | Amazon SQS                               |
+| Pipeline trigger     | AWS Lambda (Node.js)                     |
+| Document processing  | Amazon ECS / AWS Fargate                 |
+| Containerisation     | Docker                                   |
+| PDF / DOCX parsing   | Docling (DS4SD)                          |
+| Chunking             | Docling HybridChunker                    |
+| Canonical extraction | AWS Bedrock Claude 3.5 Sonnet            |
+| Embedding            | AWS Bedrock Titan Embed v2 (1024 dims)   |
+| Vector store         | Supabase (PostgreSQL + pgvector)         |
+| AWS SDK (Node.js)    | AWS SDK v3                               |
+| AWS SDK (Python)     | boto3                                    |
 
 ---
 
@@ -527,49 +526,49 @@ Stores the canonical record per document.
 
 ### `server/`
 
-| Variable | Description |
-| -------- | ----------- |
-| `PORT` | Server port (default `5005`) |
-| `S3_BUCKET_NAME` | S3 bucket for raw uploads |
-| `S3_BUCKET_REGION` | AWS region |
-| `S3_ACCESS_KEY` | AWS access key |
-| `S3_SECRET_KEY` | AWS secret key |
-| `DYNAMODB_TABLE_NAME` | DynamoDB table for document metadata |
-| `SUPABASE_DB_URL` | Postgres connection string from Supabase |
+| Variable              | Description                              |
+| --------------------- | ---------------------------------------- |
+| `PORT`                | Server port (default `5005`)             |
+| `S3_BUCKET_NAME`      | S3 bucket for raw uploads                |
+| `S3_BUCKET_REGION`    | AWS region                               |
+| `S3_ACCESS_KEY`       | AWS access key                           |
+| `S3_SECRET_KEY`       | AWS secret key                           |
+| `DYNAMODB_TABLE_NAME` | DynamoDB table for document metadata     |
+| `SUPABASE_DB_URL`     | Postgres connection string from Supabase |
 
 ### `workers/lambda-kickstarter/`
 
-| Variable | Description |
-| -------- | ----------- |
-| `ECS_CLUSTER` | ECS cluster name or ARN |
-| `ECS_TASK_DEFINITION` | Task definition name or ARN |
-| `ECS_CONTAINER_NAME` | Container name in the task definition |
-| `SUBNETS` | Comma-separated subnet IDs |
-| `SECURITY_GROUPS` | Comma-separated security group IDs |
-| `AWS_REGION` | AWS region (default `eu-west-2`) |
+| Variable              | Description                           |
+| --------------------- | ------------------------------------- |
+| `ECS_CLUSTER`         | ECS cluster name or ARN               |
+| `ECS_TASK_DEFINITION` | Task definition name or ARN           |
+| `ECS_CONTAINER_NAME`  | Container name in the task definition |
+| `SUBNETS`             | Comma-separated subnet IDs            |
+| `SECURITY_GROUPS`     | Comma-separated security group IDs    |
+| `AWS_REGION`          | AWS region (default `eu-west-2`)      |
 
 ### `workers/docling-worker/` (ECS container)
 
-| Variable | Description |
-| -------- | ----------- |
-| `BUCKET` | Source S3 bucket (injected by Lambda) |
-| `KEY` | S3 object key of the document (injected by Lambda) |
-| `DOCUMENT_ID` | Unique document ID (injected by Lambda) |
-| `PROCESSED_BUCKET` | Output bucket (defaults to source bucket) |
-| `MAX_TOKENS` | Max tokens per chunk (default `512`) |
+| Variable           | Description                                                                       |
+| ------------------ | --------------------------------------------------------------------------------- |
+| `BUCKET`           | Source S3 bucket (injected by Lambda)                                             |
+| `KEY`              | S3 object key of the document (injected by Lambda)                                |
+| `DOCUMENT_ID`      | Unique document ID (injected by Lambda)                                           |
+| `PROCESSED_BUCKET` | Output bucket (defaults to source bucket)                                         |
+| `MAX_TOKENS`       | Max tokens per chunk (default `512`)                                              |
 | `BEDROCK_MODEL_ID` | Claude model for extraction (default `anthropic.claude-3-5-sonnet-20241022-v2:0`) |
-| `AWS_REGION` | AWS region |
-| `SUPABASE_DB_URL` | Postgres connection string from Supabase |
+| `AWS_REGION`       | AWS region                                                                        |
+| `SUPABASE_DB_URL`  | Postgres connection string from Supabase                                          |
 
 ### `workers/embedding-worker/`
 
-| Variable | Description |
-| -------- | ----------- |
-| `SUPABASE_DB_URL` | Postgres connection string from Supabase |
-| `BEDROCK_MODEL_ID` | Embedding model (default `amazon.titan-embed-text-v2:0`) |
-| `EMBEDDING_DIMENSIONS` | Vector dimensions (default `1024`) |
-| `MAX_WORKERS` | Concurrent embedding threads (default `10`) |
-| `AWS_REGION` | AWS region (default `eu-west-2`) |
+| Variable               | Description                                              |
+| ---------------------- | -------------------------------------------------------- |
+| `SUPABASE_DB_URL`      | Postgres connection string from Supabase                 |
+| `BEDROCK_MODEL_ID`     | Embedding model (default `amazon.titan-embed-text-v2:0`) |
+| `EMBEDDING_DIMENSIONS` | Vector dimensions (default `1024`)                       |
+| `MAX_WORKERS`          | Concurrent embedding threads (default `10`)              |
+| `AWS_REGION`           | AWS region (default `eu-west-2`)                         |
 
 ---
 
